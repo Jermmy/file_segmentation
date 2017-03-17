@@ -1,11 +1,28 @@
 #include <iostream>
 #include <fstream>
+#include <string>
+#include <vector>
+#include <sys/stat.h>
 
 using namespace std;
 
 #include "json.hpp"
 
 using json = nlohmann::json;
+
+bool exist(string name) {
+	struct stat buffer;
+	return (stat(name.c_str(), &buffer) == 0);
+}
+
+size_t file_size(ifstream &file) {
+	size_t size;
+	file.seekg(0, std::ios::end);
+	size = file.tellg();
+	file.seekg(0, std::ios::beg);
+
+	return size;
+}
 
 int main(int argc, char const *argv[])
 {
@@ -22,15 +39,27 @@ int main(int argc, char const *argv[])
 	// 	}}
 	// };
 
-	// cout << j << endl;
-	json j;
+	// cout << j["list"] << endl;
 
-	ifstream fin("test.json");
-	fin >> j;
+	// vector<int> v = j["list"];
+	// for (auto it = v.begin(); it != v.end(); it++) {
+	// 	cout << *it << " ";
+	// }
+
+	ifstream fin("t.txt");
+
+    int size = file_size(fin);
+	cout << file_size(fin) << endl;
+	char i;
+	fin >> i;
+	cout << i << endl;
+
+	ofstream fout("t_copy.txt");
+	fout.seekp(size);
+	fout.close();
+
 	fin.close();
-	cout << j << endl;
-	cout << j["answer"] << endl;
-	cout << j["nothing"] << endl;
+
 	return 0;
 }
 
