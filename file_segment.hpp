@@ -1,11 +1,11 @@
 #include <string>
-#include <ifstream>
+#include <fstream>
 using namespace std;
 
 class FileSegment {
 public:
-	void segment(string file_name, int segment_num, string json_file);
-	void merge(string json_file);
+	void segment(string file_name, int segment_num, string json_file="config.json");
+	void merge(string json_file="config.json");
 private:
 	bool exist(string name);
 	size_t file_size(ifstream &file);
@@ -18,10 +18,11 @@ private:
 		output.write(data, size);
 	}
 private:
-	static const string kSegmentFileNum = "SegmentNum";
-	static const string kSourceFileName = "SourceFileName";
-	static const string kSegmentFiles = "SegmentFiles";
-
-	static const int kBlockSize = 1024 * 1024;  // 1MB
+	// json key
+	static const string kSegmentFileNum;
+	static const string kSourceFileName;
+	static const string kSegmentFiles;
+	
+	static const int kBlockSize;
 	
 };

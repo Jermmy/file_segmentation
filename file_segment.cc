@@ -8,8 +8,52 @@
 
 using json = nlohmann::json;
 
+ const string FileSegment::kSegmentFileNum = "SegmentNum";
+ const string FileSegment::kSourceFileName = "SourceFileName";
+ const string FileSegment::kSegmentFiles = "SegmentFiles";
+ const int FileSegment::kBlockSize = 1024 * 1024;  // 1MB
+
 void FileSegment::segment(string file_name, int segment_num, string json_file) {
 
+	// 检查源文件是否存在
+    if (!exist(file_name)) {
+    	cout << "file [" << file_name << "] doesn't exist!" << endl;
+    	return;
+    }
+
+    // 检查分片数量是否大于0
+    if (segment_num <= 0) {
+    	cout << "segment number should be greater than 0!" << endl;
+    	return;
+    }
+
+    // 分片文件名
+    vector<string> segment_files;
+    for (int i = 0; i < segment_num; i++) {
+    	segment_files.push_back(file_name + "_tmp_" + to_string(i+1));
+    	cout << "segment_file --- " << segment_files[i] << endl;
+    }
+
+    ifstream src_file_input(file_name);
+    size_t src_file_size = file_size(src_file_input);
+    size_t segment_size = src_file_size / segment_num;
+
+    // 分片输出文件
+    for (int i = 0; i < segment_num; i++) {
+    	ofstream segment_file_output(segment_files[i]);
+    	copy_file(src_file_input, segment_file_output, segment_size);
+    	segment_file_output.close();
+    }
+
+    src_file_input.close();
+
+	ofstream json_output(json_file);
+	json j;
+	j[kSegmentFileNum] = segment_num;
+	j[kSourceFileName] = file_name;
+	j[kSegmentFiles] = segment_files;
+    json_output << j;
+	json_output.close();
 }
 
 
@@ -48,6 +92,7 @@ void FileSegment::merge(string json_file) {
     	}
     }
 
+    // 合并文件
     for (auto it = segment_files.begin(); it != segment_files.end(); it++) {
     	cout << "copy file [" << *it << "]" << endl;
     	ifstream seg_input(*it);
