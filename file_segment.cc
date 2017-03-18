@@ -30,7 +30,7 @@ void FileSegment::segment(string file_name, int segment_num, string json_file) {
     // 分片文件名
     vector<string> segment_files;
     for (int i = 0; i < segment_num; i++) {
-    	segment_files.push_back(file_name + "_tmp_" + to_string(i+1));
+    	segment_files.push_back(file_name + to_string(i+1) + ".tmp");
     	cout << "segment_file --- " << segment_files[i] << endl;
     }
 
@@ -73,8 +73,9 @@ void FileSegment::merge(string json_file) {
 
     // 检查源文件是否已经存在
 	if (exist(src_file)) {
-		cout << "source file [" << src_file << "] is already existed!" << endl;
-		return;
+		// cout << "source file [" << src_file << "] is already existed!" << endl;
+		// return;
+		src_file += ".copy";
 	}
 	ofstream result(src_file);
 
