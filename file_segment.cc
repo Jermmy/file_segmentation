@@ -35,7 +35,9 @@ void FileSegment::segment(string file_name, int segment_num, string json_file) {
     }
 
     ifstream src_file_input(file_name);
+    // 输入文件大小
     size_t src_file_size = file_size(src_file_input);
+    // 分片文件大小
     size_t segment_size = src_file_size / segment_num;
 
     // 分片输出文件
@@ -63,7 +65,7 @@ void FileSegment::segment(string file_name, int segment_num, string json_file) {
 
 
 void FileSegment::merge(string json_file) {
-	json j, array;
+	json j;
 
 	if (!exist(json_file)) {
 		cout << "json file [" << json_file << "] doesn't exist!" << endl;
@@ -78,16 +80,13 @@ void FileSegment::merge(string json_file) {
 
     // 检查源文件是否已经存在
 	if (exist(src_file)) {
-		// cout << "source file [" << src_file << "] is already existed!" << endl;
-		// return;
 		src_file += ".copy";
 	}
 	ofstream result(src_file);
 
     // 文件分片数量
 	int segment_num = j[kSegmentFileNum];
-
-    array = j[kSegmentFiles];
+    // 分片文件名
     vector<string> segment_files = j[kSegmentFiles];
 
     // 检查文件分片是否齐全

@@ -7,6 +7,7 @@
 #include <vector>
 #include <sys/stat.h>
 #include <exception>
+#include <time.h>
 
 using namespace std;
 
@@ -16,6 +17,9 @@ using json = nlohmann::json;
 
 int main(int argc, char const *argv[])
 {
+	time_t start, end;
+	start = clock();
+
 	try {
 		InputParser parser(argc, argv);
 		vector<string> tokens = parser.get_tokens();
@@ -46,6 +50,9 @@ int main(int argc, char const *argv[])
 	} catch (invalid_argument &e) {
 		cout << "exception: " << e.what() << endl;
 	}
+
+	end = clock();
+	cout << "running time is : " << (double(end-start)/CLOCKS_PER_SEC) << endl;
 
 	return 0;
 }
