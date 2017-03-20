@@ -12,13 +12,15 @@ The only dependent library is [json](https://github.com/nlohmann/json), and it i
 
 Once you compile the code, you can segment your file by running 
 
-```./main -s [your_file] [segment number] [json file] ``` 
+```bash
+./main -s [your_file] [segment number] [json file] 
+``` 
 
  Note that for now you should put your file in the same directory with the program. The number of file segments is provided by `[segment number]`. The third parameter `[json file]` is a file name for configuration. It is optional and is set to `config.json` in default.
 
 For merger, you can put the file segments and the configuration file together in the directory of the program, and run the command
 
-```c++
+```bash
 ./main -m [json file]
 ```
 
